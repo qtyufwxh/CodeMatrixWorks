@@ -1,14 +1,24 @@
-function maxEnvelopes(envelopes) {
-  envelopes.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
-  const dp = new Array(envelopes.length).fill(1);
-  let max = 1;
-  for (let i = 1; i < envelopes.length; i++) {
-    for (let j = 0; j < i; j++) {
-      if (envelopes[i][1] > envelopes[j][1]) {
-        dp[i] = Math.max(dp[i], dp[j] + 1);
-        max = Math.max(max, dp[i]);
-      }
+function exist(board, word) {
+  const rows = board.length;
+  const cols = board[0].length;
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (dfs(board, i, j, word, 0)) return true;
     }
   }
-  return max;
+  return false;
+  function dfs(board, i, j, word, index) {
+    if (index === word.length) return true;
+    if (i < 0 || i >= rows || j < 0 || j >= cols || board[i][j] !== word[index])
+      return false;
+    const temp = board[i][j];
+    board[i][j] = "#";
+    const found =
+      dfs(board, i + 1, j, word, index + 1) ||
+      dfs(board, i - 1, j, word, index + 1) ||
+      dfs(board, i, j + 1, word, index + 1) ||
+      dfs(board, i, j - 1, word, index + 1);
+    board[i][j] = temp;
+    return found;
+  }
 }
